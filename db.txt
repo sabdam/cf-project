@@ -1,0 +1,183 @@
+create database bug_tracking_system_1;
+
+create table status (
+	status_id INT NOT NULL AUTO_INCREMENT,
+	status_value varchar(50) NOT NULL,
+	PRIMARY KEY (status_id)	
+);  
+
+create table priority (
+	priority_id INT NOT NULL AUTO_INCREMENT,
+	priority_value varchar(50) NOT NULL,
+	PRIMARY KEY (priority_id)
+);  // 
+
+create table severity (
+	severity_id INT NOT NULL AUTO_INCREMENT,
+	severity_value varchar(50) NOT NULL,
+	PRIMARY KEY (severity_id)
+);  //
+
+create table action (
+	action_id INT NOT NULL AUTO_INCREMENT,
+	action_value varchar(50) NOT NULL,
+	PRIMARY KEY (action_id)
+); // 
+
+
+create table user (
+	user_id INT NOT NULL AUTO_INCREMENT,
+	login varchar(50) NOT NULL,
+	name varchar(50) NOT NULL,
+	surname varchar(50) NOT NULL,
+	password varchar(50) NOT NULL,
+	PRIMARY KEY (user_id)
+);
+
+create table bug (
+	bug_id INT NOT NULL AUTO_INCREMENT,
+	unique_number varchar(36) NOT NULL,
+	launch_date date NOT NULL,
+	short_description varchar(50) NOT NULL,
+	detailed_description varchar(100) NOT NULL,
+	user_id INT,
+	status_id INT,
+	priority_id INT,
+	severity_id INT,
+	PRIMARY KEY (bug_id),
+	FOREIGN KEY (user_id) REFERENCES user (user_id),
+	FOREIGN KEY (status_id) REFERENCES status (status_id),
+	FOREIGN KEY (priority_id) REFERENCES priority (priority_id),
+	FOREIGN KEY (severity_id) REFERENCES severity (severity_id)
+);
+
+create table bug_history (
+	id INT NOT NULL AUTO_INCREMENT,
+	history_date date NOT NULL,
+	action_id INT NOT NULL,
+	comment varchar(50) NOT NULL,
+	user_id INT NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (action_id) REFERENCES action (action_id),	
+	FOREIGN KEY (user_id) REFERENCES user (user_id)
+);
+
+
+---------ALTER TABLE-------
+ALTER TABLE bug_history
+  ADD bug_id INT NOT NULL
+    AFTER id;
+    
+------ALTER FOREIGN KEY--------    
+ALTER TABLE bug_history ADD CONSTRAINT bug_id FOREIGN KEY (bug_id) 
+REFERENCES bug (bug_id);
+
+update 
+
+
+
+*****STATUS******
+insert into status (status_value) values ('new');
+insert into status (status_value) values ('open');
+insert into status (status_value) values ('resolved');
+insert into status (status_value) values ('closed');
+
+
+*****PRIORITY******
+insert into priority (priority_value) values ('very urgent');
+insert into priority (priority_value) values ('urgent');
+insert into priority (priority_value) values ('not urgent');
+insert into priority (priority_value) values ('at all do not rush');
+
+
+-----------delete--------------
+delete from priority where priority_id = 5;
+
+*****severity******
+insert into severity (severity_value) values ('alarm');
+insert into severity (severity_value) values ('critical');
+insert into severity (severity_value) values ('noncritical');
+insert into severity (severity_value) values ('change request');
+
+
+******action*******
+insert into action (action_value) values ('enter');
+insert into action (action_value) values ('open');
+insert into action (action_value) values ('decide');
+insert into action (action_value) values ('close');
+
+*******user********
+insert into user (login, name, surname, password) 
+values ('user1', 'ivan', 'ivanov', '123');
+insert into user (login, name, surname, password) 
+values ('user2', 'petr', 'petrov', '456');
+insert into user (login, name, surname, password) 
+values ('user3', 'alex', 'alexandrov', '789');
+
+*******bug*********
+insert into bug (unique_number, launch_date, short_description, detailed_description, user_id, status_id, priority_id, severity_id) 
+values (uuid(), now(), 'bug1', 'bug1bug1bug1bug1bug1', 1, 2, 3, 1);
+insert into bug (unique_number, launch_date, short_description, detailed_description, user_id, status_id, priority_id, severity_id) 
+values (uuid(), now(), 'bug2', 'bug2bug2bug2bug2bug2', 2, 3, 4, 2);
+insert into bug (unique_number, launch_date, short_description, detailed_description, user_id, status_id, priority_id, severity_id) 
+values (uuid(), now(), 'bug3', 'bug3bug3bug3bug3bug3', 3, 4, 1, 3);
+insert into bug (unique_number, launch_date, short_description, detailed_description, user_id, status_id, priority_id, severity_id) 
+values (uuid(), now(), 'bug4', 'bug4bug4bug4bug4bug4', 2, 1, 2, 4);
+insert into bug (unique_number, launch_date, short_description, detailed_description, user_id, status_id, priority_id, severity_id) 
+values (uuid(), now(), 'bug5', 'bug5bug5bug5bug5bug5', 1, 2, 3, 3);
+
+******bug_history******
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (1, now(), 1, 'enter', 2);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (1, now(), 2, 'open', 2);
+
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (2, now(), 1, 'enter', 3);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (2, now(), 2, 'open', 3);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (2, now(), 3, 'decide', 3);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (2, now(), 4, 'close', 3);
+
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (3, now(), 1, 'enter', 1);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (3, now(), 2, 'open', 1);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (3, now(), 3, 'decide', 1);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (3, now(), 2, 'back to open', 1);
+
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (4, now(), 1, 'enter', 2);
+
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (5, now(), 1, 'enter', 1);
+insert into bug_history (bug_id, history_date, action_id, comment, user_id)
+values (5, now(), 2, 'open', 1);
+
+
+
+**********trigger for update bug status*************************
+delimiter $$
+create trigger tg_update before update on bug
+for each row 
+begin
+	DECLARE errorMessage VARCHAR(255);
+	set errorMessage = '!UPDATE ERROR!';
+	if (old.status_id = 1 and new.status_id = 2) then set new.status_id = 2;
+	elseif (old.status_id = 2 and new.status_id = 3) then set new.status_id = 3;
+	elseif (old.status_id = 3 and new.status_id = 2) then set new.status_id = 2;
+	elseif (old.status_id = 3 and new.status_id = 4) then set new.status_id = 4;
+	elseif (old.status_id = new.status_id) then set new.status_id = old.status_id;
+	else 
+	begin
+		set new.status_id = old.status_id;
+		SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = errorMessage;
+    end;
+	end if;
+end $$
+delimiter;
