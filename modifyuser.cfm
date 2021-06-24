@@ -27,6 +27,8 @@
 	<cfset password = u.password>
 </cfif>
 
+<h3 style="color:Crimson"> EDIT USER </h3>
+
 <form name="form1" method="post" action="<cfoutput>#cgi.script_name#?user_id=#user_id#</cfoutput>">
 	<table>
 		<tr>
@@ -46,13 +48,18 @@
 			<td><input type="text" name="password" value="<cfoutput>#password#</cfoutput>"></td>
 		</tr>
 	</table>
+	<br>
 	<input type="submit" name="submit" value="Save changes">
 	<cfif IsDefined("url.user_id") and IsNumeric(url.user_id)>
 		<input type="hidden" name="user_id" value="<cfoutput>#url.user_id#</cfoutput>">
 	</cfif>
 </form>
 
-<cfif IsDefined("form.user_id") and IsDefined("form.login") and IsDefined("form.name") and IsDefined("form.surname") and IsDefined("form.password")>
+<cfif IsDefined("form.user_id") and (form.user_id neq "") 
+	and IsDefined("form.login") and (form.login neq "")
+	and IsDefined("form.name") and (form.name neq "")
+	and IsDefined("form.surname") and (form.surname neq "")
+	and IsDefined("form.password") and (form.password neq "")>
 	<cfquery datasource="#request.dsn#" username="#request.un#" password="#request.pw#">
 		update user
 		set login = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.login#">,
@@ -62,22 +69,4 @@
 		where user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.user_id#">
 	</cfquery>
 </cfif>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

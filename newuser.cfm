@@ -15,7 +15,9 @@
 <input type="button" value="All users" onclick="location.href='show_users.cfm?user_id=<cfoutput>#url.user_id#</cfoutput>'">
 	
 <input type="button" value="Quit" onclick="location.href='login.cfm'">
-	
+
+<h3 style="color:Crimson"> NEW USER </h3>
+
 <form name="form1" method="post" action="<cfoutput>#cgi.script_name#?user_id=#user_id#</cfoutput>">
 	<table>
 		<tr>
@@ -32,14 +34,19 @@
 		</tr>
 		<tr>
 			<th>Password</th>
-			<td><input type="text" name="password" value="<cfoutput>#password#</cfoutput>"></td>
+			<td><input type="password"  name="password" value="<cfoutput>#password#</cfoutput>"></td>
 		</tr>
 	</table>
+	<br>
 	<input type="submit" name="submit" value="Add this user">
 	<input type="hidden" name="user_id" value="<cfoutput>#url.user_id#</cfoutput>">
 </form>
 
-<cfif IsDefined("form.user_id") and IsDefined("form.login") and IsDefined("form.name") and IsDefined("form.surname") and IsDefined("form.password")>
+<cfif IsDefined("form.user_id") and (form.user_id neq "") 
+	and IsDefined("form.login") and (form.login neq "")
+	and IsDefined("form.name") and (form.name neq "")
+	and IsDefined("form.surname") and (form.surname neq "")
+	and IsDefined("form.password") and (form.password neq "")>
 	<cfquery datasource="#request.dsn#" username="#request.un#" password="#request.pw#">
 		insert into user (login, name, surname, password)
 		values(
@@ -50,22 +57,4 @@
 		)
 	</cfquery>
 </cfif>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
